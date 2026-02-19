@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Savings Tracker | Money Matrix</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:'Poppins',sans-serif;
+  min-height:100vh;
+  background:linear-gradient(135deg,#4b1248,#2c0e3a,#1f0930);
+  color:#fff;
+  overflow-x:hidden;
+}
+
+/* ===== NAVBAR ===== */
+.navbar{
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px clamp(20px,5vw,80px);
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(15px);
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  position:sticky;
+  top:0;
+  z-index:1000;
+}
+
+.nav-logo{
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  background:linear-gradient(135deg,#00e5ff,#ffcc00);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  color:#000;
+}
+
+.nav-links{
+  display:flex;
+  gap:30px;
+}
+
+.nav-links a{
+  text-decoration:none;
+  color:#fff;
+  font-weight:500;
+  position:relative;
+  transition:0.3s;
+}
+
+.nav-links a::after{
+  content:"";
+  position:absolute;
+  bottom:-6px;
+  left:0;
+  width:0;
+  height:2px;
+  background:linear-gradient(90deg,#00e5ff,#ffcc00);
+  transition:0.3s;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after{
+  width:100%;
+}
+
+.menu-toggle{
+  display:none;
+  font-size:24px;
+  cursor:pointer;
+}
+
+@media(max-width:768px){
+  .nav-links{
+    position:absolute;
+    top:70px;
+    right:0;
+    flex-direction:column;
+    background:rgba(30,10,40,0.95);
+    width:220px;
+    padding:25px;
+    gap:20px;
+    display:none;
+    border-radius:12px 0 0 12px;
+  }
+  .nav-links.show{display:flex;}
+  .menu-toggle{display:block;}
+}
+
+/* ===== MAIN CONTAINER ===== */
+.container{
+  width:min(95%,900px);
+  margin:60px auto;
+  padding:clamp(25px,5vw,45px);
+  border-radius:25px;
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(15px);
+  border:1px solid rgba(255,255,255,0.1);
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
+}
+
+/* Heading */
+h2{
+  text-align:center;
+  margin-bottom:30px;
+  font-size:clamp(22px,5vw,34px);
+  background:linear-gradient(90deg,#00e5ff,#ffcc00);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* Summary */
+.summary{
+  text-align:center;
+  margin-bottom:30px;
+  padding:25px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.05);
+}
+
+.summary h3{
+  font-size:14px;
+  color:#d1c4e9;
+}
+
+.summary h1{
+  font-size:32px;
+  color:#00e5ff;
+  margin-top:5px;
+}
+
+/* Progress Bar */
+.progress-container{
+  margin-top:18px;
+  width:100%;
+  height:18px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.1);
+  overflow:hidden;
+}
+
+.progress-bar{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#00e5ff,#ffcc00);
+  transition:width 0.6s ease;
+}
+
+/* Form */
+.form-group{
+  margin-bottom:18px;
+}
+
+.form-group label{
+  display:block;
+  margin-bottom:6px;
+  color:#d1c4e9;
+  font-size:14px;
+}
+
+.form-group input{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.2);
+  background:rgba(255,255,255,0.08);
+  color:#fff;
+  outline:none;
+}
+
+.form-group input:focus{
+  border-color:#00e5ff;
+  box-shadow:0 0 10px rgba(0,229,255,0.6);
+}
+
+/* Buttons */
+.btn{
+  width:100%;
+  padding:14px;
+  margin-top:12px;
+  border-radius:30px;
+  border:none;
+  font-weight:600;
+  cursor:pointer;
+  background:linear-gradient(135deg,#00e5ff,#ffcc00);
+  color:#000;
+  transition:0.3s;
+}
+
+.btn:hover{
+  transform:translateY(-4px);
+  box-shadow:0 15px 35px rgba(255,204,0,0.6);
+}
+
+/* Status */
+.savings-status{
+  margin-top:25px;
+  padding:18px;
+  border-radius:18px;
+  font-size:14px;
+  text-align:center;
+  background:rgba(0,229,255,0.1);
+  border:1px solid rgba(0,229,255,0.4);
+}
+
+.savings-status.alert{
+  background:rgba(255,78,80,0.15);
+  border-color:#ff4e50;
+  color:#ffb3b3;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="nav-logo">MM</div>
+  <div class="nav-links" id="navLinks">
+    <a href="mainpage.html">Home</a>
+    <a href="income.html">Income</a>
+    <a href="expenses.html">Expenses</a>
+    <a href="savings.html" class="active">Savings</a>
+    <a href="dashboard.html">Dashboard</a>
+  </div>
+  <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+</div>
+
+<div class="container">
+
+<h2>Savings Goal Tracker</h2>
+
+<div class="summary">
+  <h3>Current Savings</h3>
+  <h1 id="currentSavings">₹0</h1>
+
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+  <p id="progressText" style="margin-top:10px;font-size:13px;color:#d1c4e9;">0% Achieved</p>
+</div>
+
+<div class="form-group">
+<label>Savings Goal (₹)</label>
+<input type="number" id="savingsGoal" placeholder="Enter your savings goal">
+</div>
+
+<button class="btn" onclick="setSavingsGoal()">Set Goal</button>
+<button class="btn" onclick="checkSavings()">Check Savings</button>
+
+<div class="savings-status" id="savingsStatus"></div>
+
+</div>
+
+<script>
+function toggleMenu(){
+  document.getElementById("navLinks").classList.toggle("show");
+}
+
+function calculateSavings(){
+  const incomeData=JSON.parse(localStorage.getItem('incomeData'))||[];
+  const expenseData=JSON.parse(localStorage.getItem('expenseData'))||[];
+  const totalIncome=incomeData.reduce((s,i)=>s+parseFloat(i.amount),0);
+  const totalExpenses=expenseData.reduce((s,e)=>s+parseFloat(e.amount),0);
+  return totalIncome-totalExpenses;
+}
+
+function updateSummary(){
+  const goal=parseFloat(localStorage.getItem('savingsGoal'))||0;
+  const current=calculateSavings();
+
+  document.getElementById("currentSavings").textContent="₹"+current;
+
+  let percentage=0;
+  if(goal>0){
+    percentage=Math.min((current/goal)*100,100);
+  }
+
+  document.getElementById("progressBar").style.width=percentage+"%";
+  document.getElementById("progressText").textContent=percentage.toFixed(1)+"% Achieved";
+}
+
+function setSavingsGoal(){
+  const goal=parseFloat(document.getElementById('savingsGoal').value);
+  if(isNaN(goal)||goal<=0){alert("Enter valid goal");return;}
+  localStorage.setItem('savingsGoal',goal);
+  document.getElementById('savingsGoal').value='';
+  updateSummary();
+}
+
+function checkSavings(){
+  const goal=parseFloat(localStorage.getItem('savingsGoal'))||0;
+  const current=calculateSavings();
+  const status=document.getElementById('savingsStatus');
+
+  if(goal===0){
+    status.textContent="Please set a savings goal first!";
+    status.className="savings-status alert";
+    return;
+  }
+
+  if(current>=goal){
+    status.textContent="🎉 Congratulations! You've achieved your savings goal.";
+    status.className="savings-status";
+  }else{
+    status.textContent="⚠ You are below your savings goal. Adjust spending.";
+    status.className="savings-status alert";
+  }
+}
+
+updateSummary();
+</script>
+
+</body>
+</html>

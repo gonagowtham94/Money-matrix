@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Money Matrix | Smart Finance</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
+  min-height:100vh;
+  background:linear-gradient(135deg,#4b1248,#2c0e3a,#1f0930);
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  overflow-x:hidden;
+}
+
+/* ===== HEADER ===== */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:clamp(15px,3vw,25px) clamp(20px,6vw,60px);
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(15px);
+  border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+.logo{
+  width:clamp(35px,5vw,50px);
+  height:clamp(35px,5vw,50px);
+  border-radius:14px;
+  background:linear-gradient(135deg,#ff00cc,#ffcc00);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  color:#000;
+  font-size:clamp(14px,2vw,18px);
+}
+
+.application-name{
+  font-size:clamp(16px,3vw,24px);
+  font-weight:600;
+  text-transform:uppercase;
+  text-align:center;
+}
+
+.nav a{
+  text-decoration:none;
+  color:#fff;
+  font-weight:500;
+  font-size:clamp(14px,2vw,16px);
+  transition:0.3s;
+}
+
+.nav a:hover{
+  color:#ffcc00;
+}
+
+/* ===== HERO ===== */
+.hero-section{
+  text-align:center;
+  padding:clamp(60px,8vw,120px) 20px 60px;
+  animation:fadeIn 1s ease-in-out;
+}
+
+.hero-section h1{
+  font-size:clamp(28px,6vw,56px);
+  font-weight:700;
+  background:linear-gradient(90deg,#ff00cc,#ffcc00);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin-bottom:20px;
+  line-height:1.2;
+}
+
+.hero-section p{
+  max-width:800px;
+  margin:auto;
+  font-size:clamp(14px,2.5vw,18px);
+  color:#d1c4e9;
+  margin-bottom:50px;
+  line-height:1.6;
+  padding:0 10px;
+}
+
+/* ===== BUTTONS ===== */
+.buttons-container{
+  display:flex;
+  flex-wrap:wrap;
+  gap:clamp(10px,2vw,20px);
+  justify-content:center;
+}
+
+.button{
+  padding:clamp(10px,2vw,16px) clamp(20px,4vw,36px);
+  border-radius:40px;
+  background:linear-gradient(135deg,#ff00cc,#ffcc00);
+  color:#000;
+  font-weight:600;
+  text-decoration:none;
+  transition:0.3s;
+  box-shadow:0 10px 30px rgba(255,0,204,0.4);
+  font-size:clamp(13px,2vw,16px);
+}
+
+.button:hover{
+  transform:translateY(-6px);
+  box-shadow:0 15px 40px rgba(255,204,0,0.6);
+}
+
+/* ===== FEATURES ===== */
+.features{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:25px;
+  width:90%;
+  max-width:1200px;
+  margin:60px auto;
+  padding:0 10px;
+}
+
+.feature-card{
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(15px);
+  border-radius:20px;
+  padding:clamp(20px,4vw,35px);
+  text-align:center;
+  transition:0.3s;
+  border:1px solid rgba(255,255,255,0.1);
+}
+
+.feature-card:hover{
+  transform:translateY(-8px);
+}
+
+.feature-card h3{
+  margin-bottom:15px;
+  font-size:clamp(16px,3vw,22px);
+  background:linear-gradient(90deg,#00e5ff,#ffcc00);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.feature-card p{
+  font-size:clamp(13px,2vw,15px);
+  color:#d1c4e9;
+  line-height:1.5;
+}
+
+/* ===== FOOTER ===== */
+.footer{
+  margin-top:auto;
+  text-align:center;
+  padding:20px;
+  background:rgba(255,255,255,0.05);
+  font-size:clamp(12px,2vw,14px);
+  color:#aaa;
+}
+
+/* ===== ANIMATION ===== */
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(20px);}
+  to{opacity:1; transform:translateY(0);}
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+  <div class="logo">MM</div>
+  <div class="application-name">Money Matrix</div>
+  <div class="nav">
+    <a href="about.html">About</a>
+  </div>
+</div>
+
+<div class="hero-section">
+  <h1>Take Control of Your Financial Future</h1>
+  <p>
+    Smartly manage income, track expenses, and reach your savings goals 
+    with a modern fintech-inspired dashboard built for clarity and control.
+  </p>
+
+  <div class="buttons-container">
+    <a href="income.html" class="button">Track Income</a>
+    <a href="expenses.html" class="button">Track Expenses</a>
+    <a href="savings.html" class="button">Savings Goals</a>
+    <a href="dashboard.html" class="button">View Dashboard</a>
+  </div>
+</div>
+
+<div class="features">
+
+  <div class="feature-card">
+    <h3>📊 Smart Analytics</h3>
+    <p>Visual charts and real-time insights help you understand spending patterns and improve financial decisions.</p>
+  </div>
+
+  <div class="feature-card">
+    <h3>💰 Income Tracking</h3>
+    <p>Log daily, weekly, or monthly income and monitor financial growth instantly.</p>
+  </div>
+
+  <div class="feature-card">
+    <h3>📉 Expense Monitoring</h3>
+    <p>Track where your money goes and get alerts when spending crosses safe limits.</p>
+  </div>
+
+  <div class="feature-card">
+    <h3>🎯 Savings Goals</h3>
+    <p>Set savings targets and monitor your progress with intelligent tracking tools.</p>
+  </div>
+
+</div>
+
+<div class="footer">
+  © 2025 Money Matrix • Built with Vision & Precision
+</div>
+
+</body>
+</html>

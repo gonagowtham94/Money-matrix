@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Income Tracker | Money Matrix</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:'Poppins',sans-serif;
+  min-height:100vh;
+  background:linear-gradient(135deg,#4b1248,#2c0e3a,#1f0930);
+  color:#fff;
+  overflow-x:hidden;
+}
+
+/* ===== NAVBAR ===== */
+.navbar{
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px clamp(20px,5vw,80px);
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(15px);
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  position:sticky;
+  top:0;
+  z-index:1000;
+}
+
+.nav-logo{
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  background:linear-gradient(135deg,#ff00cc,#ffcc00);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  color:#000;
+}
+
+.nav-links{
+  display:flex;
+  gap:30px;
+}
+
+.nav-links a{
+  text-decoration:none;
+  color:#fff;
+  font-weight:500;
+  position:relative;
+  transition:0.3s;
+}
+
+.nav-links a::after{
+  content:"";
+  position:absolute;
+  bottom:-6px;
+  left:0;
+  width:0;
+  height:2px;
+  background:linear-gradient(90deg,#ff00cc,#ffcc00);
+  transition:0.3s;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after{
+  width:100%;
+}
+
+.menu-toggle{
+  display:none;
+  font-size:24px;
+  cursor:pointer;
+}
+
+@media(max-width:768px){
+  .nav-links{
+    position:absolute;
+    top:70px;
+    right:0;
+    flex-direction:column;
+    background:rgba(30,10,40,0.95);
+    width:220px;
+    padding:25px;
+    gap:20px;
+    display:none;
+    border-radius:12px 0 0 12px;
+  }
+  .nav-links.show{display:flex;}
+  .menu-toggle{display:block;}
+}
+
+/* ===== MAIN CONTAINER ===== */
+.container{
+  width:min(95%,900px);
+  margin:60px auto;
+  padding:clamp(25px,5vw,45px);
+  border-radius:25px;
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(15px);
+  border:1px solid rgba(255,255,255,0.1);
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
+}
+
+/* Heading */
+h2{
+  text-align:center;
+  margin-bottom:30px;
+  font-size:clamp(22px,5vw,34px);
+  background:linear-gradient(90deg,#ff00cc,#ffcc00);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* Summary */
+.summary{
+  text-align:center;
+  margin-bottom:30px;
+  padding:20px;
+  border-radius:18px;
+  background:rgba(255,255,255,0.05);
+}
+
+.summary h3{color:#d1c4e9;font-size:14px;}
+.summary h1{font-size:32px;color:#ffcc00;margin-top:5px;}
+
+/* Form */
+.form-group{margin-bottom:18px;}
+.form-group label{display:block;margin-bottom:6px;color:#d1c4e9;font-size:14px;}
+
+.form-group input,
+.form-group select{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.2);
+  background:rgba(255,255,255,0.08);
+  color:#fff;
+  outline:none;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+  border-color:#ffcc00;
+  box-shadow:0 0 10px rgba(255,204,0,0.5);
+}
+
+/* Buttons */
+.btn{
+  width:100%;
+  padding:14px;
+  margin-top:12px;
+  border-radius:30px;
+  border:none;
+  font-weight:600;
+  cursor:pointer;
+  background:linear-gradient(135deg,#ff00cc,#ffcc00);
+  color:#000;
+  transition:0.3s;
+}
+
+.btn:hover{
+  transform:translateY(-4px);
+  box-shadow:0 15px 35px rgba(255,204,0,0.6);
+}
+
+/* List */
+.income-list{margin-top:35px;}
+.income-list h3{color:#ffcc00;margin-bottom:15px;}
+.income-list ul{list-style:none;}
+
+.income-list li{
+  padding:14px;
+  border-radius:15px;
+  margin-bottom:12px;
+  background:rgba(255,255,255,0.08);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.delete-btn{
+  padding:6px 12px;
+  border-radius:20px;
+  border:none;
+  cursor:pointer;
+  background:linear-gradient(135deg,#ff4e50,#f00000);
+  color:#fff;
+}
+
+/* Chart */
+.chart-container{
+  margin-top:35px;
+  padding:20px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.05);
+  height:350px;
+}
+canvas{width:100%!important;height:100%!important;}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="nav-logo">MM</div>
+  <div class="nav-links" id="navLinks">
+    <a href="mainpage.html">Home</a>
+    <a href="income.html" class="active">Income</a>
+    <a href="expenses.html">Expenses</a>
+    <a href="savings.html">Savings</a>
+    <a href="dashboard.html">Dashboard</a>
+  </div>
+  <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+</div>
+
+<div class="container">
+<h2>Track Your Income</h2>
+
+<div class="summary">
+  <h3>Total Income</h3>
+  <h1 id="totalIncome">₹0</h1>
+</div>
+
+<div class="form-group">
+<label>Income Type</label>
+<select id="incomeType">
+<option value="daily">Daily</option>
+<option value="weekly">Weekly</option>
+<option value="monthly">Monthly</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Income Source</label>
+<input type="text" id="incomeSource" placeholder="Enter income source">
+</div>
+
+<div class="form-group">
+<label>Amount</label>
+<input type="number" id="incomeAmount" placeholder="Enter income amount">
+</div>
+
+<div class="form-group">
+<label>Date</label>
+<input type="date" id="incomeDate">
+</div>
+
+<button class="btn" onclick="addIncome()">Add Income</button>
+<button class="btn" onclick="displayIncomeHistory()">Show Income History</button>
+<button class="btn" onclick="renderChart()">Show Income Chart</button>
+
+<div class="income-list">
+<h3>Income History</h3>
+<ul id="incomeHistory"></ul>
+</div>
+
+<div class="chart-container">
+<canvas id="incomeChart"></canvas>
+</div>
+
+</div>
+
+<script>
+let chartInstance=null;
+
+function toggleMenu(){
+  document.getElementById("navLinks").classList.toggle("show");
+}
+
+function updateTotal(){
+  const incomeData=JSON.parse(localStorage.getItem('incomeData'))||[];
+  const total=incomeData.reduce((sum,i)=>sum+parseFloat(i.amount),0);
+  document.getElementById("totalIncome").textContent="₹"+total;
+}
+
+function addIncome(){
+  const type=incomeType.value;
+  const source=incomeSource.value;
+  const amount=incomeAmount.value;
+  const date=incomeDate.value;
+
+  if(!source||!amount){alert("Fill required fields");return;}
+
+  const newIncome={id:Date.now(),type,source,amount,date};
+  let data=JSON.parse(localStorage.getItem('incomeData'))||[];
+  data.push(newIncome);
+  localStorage.setItem('incomeData',JSON.stringify(data));
+
+  incomeSource.value="";
+  incomeAmount.value="";
+  incomeDate.value="";
+  updateTotal();
+}
+
+function displayIncomeHistory(){
+  const list=document.getElementById('incomeHistory');
+  list.innerHTML="";
+  const data=JSON.parse(localStorage.getItem('incomeData'))||[];
+
+  data.forEach(i=>{
+    const li=document.createElement('li');
+    li.innerHTML=`${i.type.toUpperCase()} - ${i.source} - ₹${i.amount} (${i.date||''})
+    <button class="delete-btn" onclick="deleteIncome(${i.id})">Delete</button>`;
+    list.appendChild(li);
+  });
+}
+
+function deleteIncome(id){
+  let data=JSON.parse(localStorage.getItem('incomeData'))||[];
+  data=data.filter(i=>i.id!==id);
+  localStorage.setItem('incomeData',JSON.stringify(data));
+  displayIncomeHistory();
+  updateTotal();
+}
+
+function renderChart(){
+  const ctx=document.getElementById('incomeChart');
+  const data=JSON.parse(localStorage.getItem('incomeData'))||[];
+
+  const labels=data.map(i=>i.date||"No Date");
+  const amounts=data.map(i=>i.amount);
+
+  if(chartInstance) chartInstance.destroy();
+
+  chartInstance=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:labels,
+      datasets:[{
+        label:'Income',
+        data:amounts,
+        backgroundColor:'#ffcc00'
+      }]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      scales:{y:{beginAtZero:true}}
+    }
+  });
+}
+
+updateTotal();
+</script>
+
+</body>
+</html>
